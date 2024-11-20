@@ -1,1 +1,28 @@
-spring.application.name=backendExam
+spring:
+  application:
+    name: backendExam
+  jpa:
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  datasource:
+    url: jdbc:postgresql://localhost:5432/appdb
+    username: appuser
+    password: pirate
+  flyway:
+    enabled: true
+server:
+  error:
+    include-message: always
+    whitelabel:
+      enabled: false
+
+management:
+  server.port : 8800
+  endpoints.web.exposure.include: "*"
+  endpoint.health.show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        "http": true
