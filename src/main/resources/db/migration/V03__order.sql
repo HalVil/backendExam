@@ -1,18 +1,18 @@
-CREATE TABLE `order` (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    customer_id BIGINT NOT NULL,
+CREATE TABLE IF NOT EXISTS candy_order (
+    candy_order_id BIGINT PRIMARY KEY,
     shipping_charge DECIMAL(10, 2) NOT NULL,
     total_price DECIMAL(10, 2) NOT NULL,
     shipped BOOLEAN NOT NULL,
-    shipping_address_id BIGINT,
-    FOREIGN KEY (customer_id) REFERENCES customer(id),
-    FOREIGN KEY (shipping_address_id) REFERENCES customer_address(id)
+    customer_id BIGINT NOT NULL,
+    shipping_address_id BIGINT NOT NULL
 );
 
-CREATE TABLE order_product (
-    order_id BIGINT NOT NULL,
+CREATE SEQUENCE candy_order_seq;
+
+CREATE TABLE IF NOT EXISTS order_product (
+    order_product_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    PRIMARY KEY (order_id, product_id),
-    FOREIGN KEY (order_id) REFERENCES `order`(id) ON DELETE CASCADE
-    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
+    PRIMARY KEY (order_product_id, product_id)
 );
+
+CREATE SEQUENCE order_product_seq;

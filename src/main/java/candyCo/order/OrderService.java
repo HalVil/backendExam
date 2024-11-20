@@ -41,6 +41,6 @@ public class OrderService {
     // Hent produkter i en ordre
     public List<Product> getOrderProducts(Long id) {
         Order order = getOrderById(id);
-        return order.getProducts(); // Antar at getProducts() returnerer en liste
+        return (List<Product>) order.getProducts(); // Antar at getProducts() returnerer en liste
     }
 }

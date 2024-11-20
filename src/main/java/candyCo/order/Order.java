@@ -17,48 +17,33 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "order")
+@Table(name = "candy_order")
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "candy_order_gen")
+    @SequenceGenerator(name = "candy_order_gen", sequenceName = "candy_order_seq", allocationSize = 1)
+    @Column(name = "candy_order_id", nullable = false)
     private Long id;
 
-    //flere ordre til samme kunde
+    private BigDecimal shippingCharge;
+    private BigDecimal totalPrice;
+    private Boolean shipped;
+
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    //knytter flere produkter til en ordre
     @ManyToMany
     @JoinTable(
             name = "order_product",
-            joinColumns = @JoinColumn(name = "order_id"),
+            joinColumns = @JoinColumn(name = "candy_order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private Set<Product> products = new HashSet<>();
 
-    @Column(nullable = false)
-    private BigDecimal shippingCharge;
 
-    @Column(nullable = false)
-    private BigDecimal totalPrice;
-
-    @Column(nullable = false)
-    private Boolean shipped;
-
-    //en ordre kan kun ha en leveringsadresse
     @ManyToOne
     @JoinColumn(name = "shipping_address_id")
     private CustomerAddress shippingAddress;
-
-    // denne kalles når initData kjøres
-    public Order (Customer customer, Set<Product> products, BigDecimal shippingCharge) {
-        this.customer = customer;
-        this.products = products;
-        this.shippingCharge = shippingCharge;
-        this.shipped = false;
-        this.shippingAddress = null;
-
-    }
 }
