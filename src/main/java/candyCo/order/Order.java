@@ -25,7 +25,6 @@ public class Order {
     @SequenceGenerator(name = "candy_order_gen", sequenceName = "candy_order_seq", allocationSize = 1)
     @Column(name = "candy_order_id", nullable = false)
     private Long id;
-
     private BigDecimal shippingCharge;
     private BigDecimal totalPrice;
     private Boolean shipped;

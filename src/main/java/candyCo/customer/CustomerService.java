@@ -22,7 +22,7 @@ public class CustomerService {
 
     public Customer getCustomerById(Long id) {
         return repo.findById(id)
-                .orElseThrow(() -> new CustomerNotFoundException("Address with ID " + id + " was not found."));
+                .orElseThrow(() -> new CustomerNotFoundException("Customer with ID " + id + " was not found."));
     }
 
     public List<Customer> getAllCustomers() {

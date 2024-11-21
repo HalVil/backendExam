@@ -24,8 +24,11 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
-        return new ResponseEntity<>(customerService.getCustomerById(id), HttpStatus.OK);
+    public ResponseEntity<Customer> getCustomerDetails(@PathVariable Long id) {
+        Customer customer = customerService.getCustomerById(id);
+        customer.getAddresses().size();
+        customer.getOrders().size();
+        return ResponseEntity.ok(customer);
     }
 
     @GetMapping
@@ -37,15 +40,5 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         customerService.deleteCustomer(id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}/orders")
-    public ResponseEntity<List<Order>> getCustomerOrders(@PathVariable Long id) {
-        return new ResponseEntity<>(customerService.getCustomerOrders(id), HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}/addresses")
-    public ResponseEntity<List<CustomerAddress>> getCustomerAddresses(@PathVariable Long id) {
-        return new ResponseEntity<>(customerService.getCustomerAddresses(id), HttpStatus.OK);
     }
 }

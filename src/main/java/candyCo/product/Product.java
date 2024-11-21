@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "products")
+@Table(name = "product")
 public class Product {
 
     @Id
@@ -19,7 +19,6 @@ public class Product {
     @SequenceGenerator(name = "product_gen", sequenceName = "product_seq", allocationSize = 1)
     @Column(name = "product_id", nullable = false)
     private Long id;
-
     private String name;
     private String description;
     private BigDecimal price;

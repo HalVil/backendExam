@@ -20,8 +20,8 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_gen")
     @SequenceGenerator(name = "customer_gen", sequenceName = "customer_seq", allocationSize = 1)
     @Column(name = "customer_id", nullable = false)
-    private long id;
 
+    private long id;
     private String firstName;
     private String lastName;
     private int phone;

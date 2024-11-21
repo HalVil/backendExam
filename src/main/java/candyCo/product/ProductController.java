@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/product")
 public class ProductController {
 
     private final ProductService productService;
@@ -40,5 +40,13 @@ public class ProductController {
     @GetMapping("/available")
     public ResponseEntity<List<Product>> getAvailableProducts() {
         return new ResponseEntity<>(productService.getAvailableProducts(), HttpStatus.OK);
+    }
+    @GetMapping("/{id}/availability")
+    public ResponseEntity<String> checkAvailability(@PathVariable Long id) {
+        Product product = productService.getProductById(id);
+        if (product.getQuantityOnHand() < 1) {
+            return ResponseEntity.ok("Out of Stock");
+        }
+        return ResponseEntity.ok("Available");
     }
 }

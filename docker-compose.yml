@@ -1,6 +1,6 @@
 services:
   db:
-    container_name: "postgresql"
+    container_name: "exam"
     image: postgres:alpine
     ports:
       - '5432:5432'

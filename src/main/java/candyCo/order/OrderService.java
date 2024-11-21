@@ -1,8 +1,10 @@
 package candyCo.order;
 
 import candyCo.product.Product;
+import candyCo.product.ProductRepo;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -10,14 +12,34 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepo orderRepository;
+    private final ProductRepo productRepository;
 
-    public OrderService(OrderRepo orderRepository) {
+    public OrderService(OrderRepo orderRepository,ProductRepo productRepository) {
         this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
     }
 
-    // Opprett en ny ordre
     public Order createOrder(Order order) {
-        // Eventuell forretningslogikk før lagring
+        BigDecimal totalPrice = BigDecimal.ZERO;
+
+        for (Product product : order.getProducts()) {
+            Product dbProduct = productRepository.findById(product.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Product not found: " + product.getId()));
+
+            if (dbProduct.getQuantityOnHand() < 1) {
+                throw new IllegalArgumentException("Product out of stock: " + dbProduct.getName());
+            }
+
+            // Deduct stock and update the product
+            dbProduct.setQuantityOnHand(dbProduct.getQuantityOnHand() - 1);
+            productRepository.save(dbProduct);
+
+            // Update total price
+            totalPrice = totalPrice.add(dbProduct.getPrice());
+        }
+
+        order.setTotalPrice(totalPrice.add(order.getShippingCharge()));
+        order.setShipped(false); // Default order to not shipped
         return orderRepository.save(order);
     }
 
