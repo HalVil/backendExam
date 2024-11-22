@@ -12,6 +12,7 @@ CREATE SEQUENCE candy_order_seq;
 CREATE TABLE IF NOT EXISTS order_product (
     candy_order_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
+    quantity INT NOT NULL,
     PRIMARY KEY (candy_order_id, product_id)
 );
 

@@ -37,14 +37,9 @@ public class Order {
     @JsonIgnoreProperties({"orders", "addresses"})
     private Customer customer;
 
-    @ManyToMany
-    @JoinTable(
-            name = "order_product",
-            joinColumns = @JoinColumn(name = "candy_order_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    @JsonIgnoreProperties("orders")
-    private Set<Product> product = new HashSet<>();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("order")
+    private Set<OrderProduct> orderProducts = new HashSet<>();
 
 
     @ManyToOne

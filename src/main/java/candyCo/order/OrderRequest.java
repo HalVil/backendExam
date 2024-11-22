@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Set;
 
 @Getter
@@ -12,7 +13,7 @@ import java.util.Set;
 public class OrderRequest {
     private BigDecimal shippingCharge;
     private Long customerId;
-    private Set<Long> productIds;
+    private Map<Long, Integer> productsWithQuantities;  //lagt til og slått sammen med product id og quantity
     private Long shippingAddressId;
     private Boolean shipped;
 

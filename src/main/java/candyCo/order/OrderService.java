@@ -6,10 +6,13 @@ import candyCo.customeraddress.CustomerAddress;
 import candyCo.customeraddress.CustomerAddressService;
 import candyCo.product.Product;
 import candyCo.product.ProductService;
+import candyCo.product.ProductStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -32,31 +35,55 @@ public class OrderService {
     }
 
     public Order createOrderFromRequest(OrderRequest request) {
-        // Hent kunde via CustomerService
+        // Hent kunde
         Customer customer = customerService.getCustomerById(request.getCustomerId());
 
-        // Hent tilgjengelige produkter via ProductService
-        Set<Product> products = productService.getAvailableProducts(request.getProductIds());
+        // Hent produkter og opprett OrderProduct-objekter
+        Set<OrderProduct> orderProducts = new HashSet<>();
+        for (Map.Entry<Long, Integer> entry : request.getProductsWithQuantities().entrySet()) {
+            Long productId = entry.getKey();
+            Integer quantity = entry.getValue();
 
-        // Hent shipping address via CustomerAddressService
+            // Hent produkt og valider status
+            Product product = productService.getProductById(productId);
+            if (product.getStatus() != ProductStatus.AVAILABLE) {
+                throw new IllegalArgumentException("Product is not available: " + product.getName());
+            }
+
+            // Opprett OrderProduct
+            OrderProduct orderProduct = new OrderProduct();
+            orderProduct.setProduct(product);
+            orderProduct.setQuantity(quantity);
+            orderProducts.add(orderProduct);
+        }
+
+        // Opprett Order
         CustomerAddress shippingAddress = customerAddressService.getAddressById(request.getShippingAddressId());
-
-        // Opprett ordre
         Order order = new Order();
-        order.setShippingCharge(request.getShippingCharge());
         order.setCustomer(customer);
-        order.setProduct(products);
         order.setShippingAddress(shippingAddress);
-        order.setTotalPrice(calculateTotalPrice(products, request.getShippingCharge()));
         order.setShipped(request.getShipped());
+        order.setShippingCharge(request.getShippingCharge());
+        order.setOrderProducts(orderProducts);
 
+        // Koble Order til OrderProduct
+        for (OrderProduct orderProduct : orderProducts) {
+            orderProduct.setOrder(order); // Viktig for å sette relasjonen
+        }
+
+        // Beregn totalpris
+        order.setTotalPrice(calculateTotalPrice(orderProducts, request.getShippingCharge()));
+
+        // Lagre Order (OrderProduct blir automatisk lagret pga. CascadeType.PERSIST)
         return orderRepository.save(order);
     }
 
 
-    private BigDecimal calculateTotalPrice(Set<Product> products, BigDecimal shippingCharge) {
-        BigDecimal productTotal = products.stream()
-                .map(Product::getPrice)
+
+
+    private BigDecimal calculateTotalPrice(Set<OrderProduct> orderProducts, BigDecimal shippingCharge) {
+        BigDecimal productTotal = orderProducts.stream()
+                .map(orderProduct -> orderProduct.getProduct().getPrice().multiply(BigDecimal.valueOf(orderProduct.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return productTotal.add(shippingCharge);
     }
@@ -81,9 +108,5 @@ public class OrderService {
         orderRepository.delete(existingOrder);
     }
 
-    // Hent produkter i en ordre
-    public Set<Product> getOrderProducts(Long id) {
-        Order order = getOrderById(id);
-        return order.getProduct(); // Antar at getProducts() returnerer en liste
-    }
+    //fjernet midlertidig
 }

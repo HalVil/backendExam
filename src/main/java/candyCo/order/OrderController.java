@@ -50,9 +50,5 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // Hent alle produkter tilknyttet en ordre
-    @GetMapping("/{id}/products")
-    public ResponseEntity<Set<Product>> getOrderProducts(@PathVariable Long id) {
-        return new ResponseEntity<>(orderService.getOrderProducts(id), HttpStatus.OK);
-    }
+    //fjernet midlertidig
 }
