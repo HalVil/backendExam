@@ -37,10 +37,7 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/available")
-    public ResponseEntity<List<Product>> getAvailableProducts() {
-        return new ResponseEntity<>(productService.getAvailableProducts(), HttpStatus.OK);
-    }
+
     @GetMapping("/{id}/availability")
     public ResponseEntity<String> checkAvailability(@PathVariable Long id) {
         Product product = productService.getProductById(id);

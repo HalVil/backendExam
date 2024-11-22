@@ -3,6 +3,8 @@ package candyCo.product;
 import candyCo.application.error.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -33,7 +35,10 @@ public class ProductService {
         productRepository.delete(product);
     }
 
-    public List<Product> getAvailableProducts() {
-        return productRepository.findByStatus(ProductStatus.AVAILABLE);
+    public Set<Product> getAvailableProducts(Set<Long> productIds) {
+        return productRepository.findByStatus(ProductStatus.AVAILABLE).stream()
+                .filter(product -> productIds.contains(product.getId()))
+                .collect(Collectors.toSet());
     }
+
 }

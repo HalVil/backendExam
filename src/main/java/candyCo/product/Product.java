@@ -19,6 +19,7 @@ public class Product {
     @SequenceGenerator(name = "product_gen", sequenceName = "product_seq", allocationSize = 1)
     @Column(name = "product_id", nullable = false)
     private Long id;
+
     private String name;
     private String description;
     private BigDecimal price;

@@ -1,47 +1,68 @@
 package candyCo.order;
 
+import candyCo.customer.Customer;
+import candyCo.customer.CustomerService;
+import candyCo.customeraddress.CustomerAddress;
+import candyCo.customeraddress.CustomerAddressService;
 import candyCo.product.Product;
-import candyCo.product.ProductRepo;
+import candyCo.product.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 
 @Service
 public class OrderService {
 
     private final OrderRepo orderRepository;
-    private final ProductRepo productRepository;
+    private final CustomerService customerService;
+    private final ProductService productService;
+    private final CustomerAddressService customerAddressService;
 
-    public OrderService(OrderRepo orderRepository,ProductRepo productRepository) {
+    public OrderService(OrderRepo orderRepository,
+                        CustomerService customerService,
+                        ProductService productService,
+                        CustomerAddressService customerAddressService) {
         this.orderRepository = orderRepository;
-        this.productRepository = productRepository;
+        this.customerService = customerService;
+        this.productService = productService;
+        this.customerAddressService = customerAddressService;
     }
 
-    public Order createOrder(Order order) {
-        BigDecimal totalPrice = BigDecimal.ZERO;
+    public Order createOrderFromRequest(OrderRequest request) {
+        // Hent kunde via CustomerService
+        Customer customer = customerService.getCustomerById(request.getCustomerId());
 
-        for (Product product : order.getProducts()) {
-            Product dbProduct = productRepository.findById(product.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Product not found: " + product.getId()));
+        // Hent tilgjengelige produkter via ProductService
+        Set<Product> products = productService.getAvailableProducts(request.getProductIds());
 
-            if (dbProduct.getQuantityOnHand() < 1) {
-                throw new IllegalArgumentException("Product out of stock: " + dbProduct.getName());
-            }
+        // Hent shipping address via CustomerAddressService
+        CustomerAddress shippingAddress = customerAddressService.getAddressById(request.getShippingAddressId());
 
-            // Deduct stock and update the product
-            dbProduct.setQuantityOnHand(dbProduct.getQuantityOnHand() - 1);
-            productRepository.save(dbProduct);
+        // Opprett ordre
+        Order order = new Order();
+        order.setShippingCharge(request.getShippingCharge());
+        order.setCustomer(customer);
+        order.setProduct(products);
+        order.setShippingAddress(shippingAddress);
+        order.setTotalPrice(calculateTotalPrice(products, request.getShippingCharge()));
+        order.setShipped(request.getShipped());
 
-            // Update total price
-            totalPrice = totalPrice.add(dbProduct.getPrice());
-        }
-
-        order.setTotalPrice(totalPrice.add(order.getShippingCharge()));
-        order.setShipped(false); // Default order to not shipped
         return orderRepository.save(order);
     }
+
+
+    private BigDecimal calculateTotalPrice(Set<Product> products, BigDecimal shippingCharge) {
+        BigDecimal productTotal = products.stream()
+                .map(Product::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return productTotal.add(shippingCharge);
+    }
+
+    // Other methods remain unchanged
+
 
     // Hent en ordre basert på ID
     public Order getOrderById(Long id) {
@@ -61,8 +82,8 @@ public class OrderService {
     }
 
     // Hent produkter i en ordre
-    public List<Product> getOrderProducts(Long id) {
+    public Set<Product> getOrderProducts(Long id) {
         Order order = getOrderById(id);
-        return (List<Product>) order.getProducts(); // Antar at getProducts() returnerer en liste
+        return order.getProduct(); // Antar at getProducts() returnerer en liste
     }
 }

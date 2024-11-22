@@ -10,9 +10,9 @@ CREATE TABLE IF NOT EXISTS candy_order (
 CREATE SEQUENCE candy_order_seq;
 
 CREATE TABLE IF NOT EXISTS order_product (
-    order_product_id BIGINT NOT NULL,
+    candy_order_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    PRIMARY KEY (order_product_id, product_id)
+    PRIMARY KEY (candy_order_id, product_id)
 );
 
 CREATE SEQUENCE order_product_seq;

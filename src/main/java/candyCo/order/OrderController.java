@@ -1,11 +1,14 @@
 package candyCo.order;
 
+import candyCo.customer.CustomerService;
 import candyCo.product.Product;
+import candyCo.product.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -13,15 +16,20 @@ public class OrderController {
 
     private final OrderService orderService;
 
+
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
+
+
     }
 
     // Opprett en ny ordre
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        return new ResponseEntity<>(orderService.createOrder(order), HttpStatus.CREATED);
+    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest request) {
+        Order order = orderService.createOrderFromRequest(request);
+        return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
+
 
     // Hent en ordre basert på ID
     @GetMapping("/{id}")
@@ -44,7 +52,7 @@ public class OrderController {
 
     // Hent alle produkter tilknyttet en ordre
     @GetMapping("/{id}/products")
-    public ResponseEntity<List<Product>> getOrderProducts(@PathVariable Long id) {
+    public ResponseEntity<Set<Product>> getOrderProducts(@PathVariable Long id) {
         return new ResponseEntity<>(orderService.getOrderProducts(id), HttpStatus.OK);
     }
 }

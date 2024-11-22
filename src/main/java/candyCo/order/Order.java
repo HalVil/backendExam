@@ -4,6 +4,8 @@ import candyCo.customer.Customer;
 import candyCo.customeraddress.CustomerAddress;
 
 import candyCo.product.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,12 +27,14 @@ public class Order {
     @SequenceGenerator(name = "candy_order_gen", sequenceName = "candy_order_seq", allocationSize = 1)
     @Column(name = "candy_order_id", nullable = false)
     private Long id;
+
     private BigDecimal shippingCharge;
     private BigDecimal totalPrice;
     private Boolean shipped;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
+    @JsonIgnoreProperties({"orders", "addresses"})
     private Customer customer;
 
     @ManyToMany
@@ -39,10 +43,12 @@ public class Order {
             joinColumns = @JoinColumn(name = "candy_order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private Set<Product> products = new HashSet<>();
+    @JsonIgnoreProperties("orders")
+    private Set<Product> product = new HashSet<>();
 
 
     @ManyToOne
     @JoinColumn(name = "shipping_address_id")
+    @JsonIgnoreProperties("orders")
     private CustomerAddress shippingAddress;
 }
