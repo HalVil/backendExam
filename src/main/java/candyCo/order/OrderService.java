@@ -49,16 +49,30 @@ public class OrderService {
             if (product.getStatus() != ProductStatus.AVAILABLE) {
                 throw new IllegalArgumentException("Product is not available: " + product.getName());
             }
+            if (product.getQuantityOnHand() < quantity) {
+                throw new IllegalArgumentException(
+                        "Not enough stock for product: " + product.getName() +
+                                ". Available: " + product.getQuantityOnHand() + ", Requested: " + quantity);
+            }
 
-            // Opprett OrderProduct
+            // Reduce stock and update status
+            product.setQuantityOnHand(product.getQuantityOnHand() - quantity);
+            if (product.getQuantityOnHand() == 0) {
+                product.setStatus(ProductStatus.OUT_OF_STOCK);
+            }
+            productService.createProduct(product); // Save the updated product
+
+            // Create OrderProduct
             OrderProduct orderProduct = new OrderProduct();
             orderProduct.setProduct(product);
             orderProduct.setQuantity(quantity);
             orderProducts.add(orderProduct);
         }
 
-        // Opprett Order
+        // Fetch shipping address
         CustomerAddress shippingAddress = customerAddressService.getAddressById(request.getShippingAddressId());
+
+        // Create Order
         Order order = new Order();
         order.setCustomer(customer);
         order.setShippingAddress(shippingAddress);
@@ -66,18 +80,17 @@ public class OrderService {
         order.setShippingCharge(request.getShippingCharge());
         order.setOrderProducts(orderProducts);
 
-        // Koble Order til OrderProduct
+        // Link Order to OrderProducts
         for (OrderProduct orderProduct : orderProducts) {
-            orderProduct.setOrder(order); // Viktig for å sette relasjonen
+            orderProduct.setOrder(order); // Important for setting the relationship
         }
 
-        // Beregn totalpris
+        // Calculate total price
         order.setTotalPrice(calculateTotalPrice(orderProducts, request.getShippingCharge()));
 
-        // Lagre Order (OrderProduct blir automatisk lagret pga. CascadeType.PERSIST)
+        // Save Order (OrderProduct will be automatically saved due to CascadeType.PERSIST)
         return orderRepository.save(order);
     }
-
 
 
 
