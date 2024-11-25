@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CandyCo Products</title>
+</head>
+<body>
+<h1>CandyCo Products</h1>
+<div align="center">
+    <h1>Back to Customers</h1>
+    <a href="/html">Click to view customers</a>
+</div>
+
+<h2>Our Products:</h2>
+
+<!-- Sjekk om listen med produkter er tom -->
+<div th:if="${products != null}">
+    <ul>
+        <!-- Iterer gjennom produktene og vis dem i en liste -->
+        <li th:each="product : ${products}">
+            <p>Product ID: <span th:text="${product.id}"></span></p>  <!-- Produkt-ID -->
+            <p>Name: <span th:text="${product.name}"></span></p>
+            <p>Price: <span th:text="${product.price}"></span></p>
+            <p>Description: <span th:text="${product.description}"></span></p>
+            <p>Quantity: <span th:text="${product.quantityOnHand}"></span></p>
+            <p>Status: <span th:text="${product.status}"></span></p>
+
+            <hr />
+        </li>
+    </ul>
+</div>
+
+<!-- Hvis det ikke er noen produkter -->
+<div th:if="${products == null}">
+    <p>No products available.</p>
+</div>
+
+</body>
+</html>

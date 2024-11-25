@@ -1,15 +1,51 @@
 package candyCo.application;
 
 
+import candyCo.customer.Customer;
+import candyCo.customeraddress.CustomerAddress;
+import candyCo.customeraddress.CustomerAddressService;
+import candyCo.product.Product;
+import candyCo.customer.CustomerService;
+import candyCo.product.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/html")
 public class HtmlController {
-    @GetMapping
-    public String index() {
-        return "html/index";
+    private final CustomerService customerService;
+    private final ProductService productService;
+    private final CustomerAddressService customerAddressService;
+
+
+    @Autowired
+    public HtmlController(CustomerService customerService, ProductService productService, CustomerAddressService customerAddressService) {
+        this.customerService = customerService;
+        this.productService = productService;
+        this.customerAddressService = customerAddressService;
     }
+
+    @GetMapping
+    public String getAllCustomers(Model model) {
+        List<Customer> customers = customerService.getAllCustomers();
+        List<CustomerAddress> customerAddresses = customerAddressService.getAllAddresses();
+        System.out.println("Customers size: " + customers.size());  // Debugging output
+        model.addAttribute("customers", customers);
+        System.out.println("Customers address size: " + customerAddresses.size());
+        model.addAttribute("customerAddresses", customerAddresses);
+        return "index";  // Hovedsiden for kunder
+    }
+    @GetMapping("/products")  // Denne URL-en kan være "/html/products" for produktsiden
+    public String getAllProducts(Model model) {
+        List<Product> products = productService.getAllProducts();
+        model.addAttribute("products", products);
+        return "products";  // Henviser til en egen HTML-mal for produkter
+    }
+
 }
+

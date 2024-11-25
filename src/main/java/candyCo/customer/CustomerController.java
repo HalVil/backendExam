@@ -2,6 +2,7 @@ package candyCo.customer;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -51,6 +52,8 @@ public class CustomerController {
         Customer updatedCustomer = customerService.updateCustomerContact(id, request.getEmail(), request.getPhone());
         return ResponseEntity.ok(updatedCustomer);
     }
+
+
 
 
 

@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>CandyCo</title>
 </head>
 <body>
-<h1>CandyCo website</h1>
+<h1>CandyCo Website</h1>
+<div align="center">
+    <h1>Products</h1>
+    <a href="/html/products">Click to view products</a>
+</div>
+<h2>Our Customers:</h2>
+
+
+<!-- Sjekk om listen med kunder er tom -->
+<div th:if="${customers != null}">
+    <ul>
+        <!-- Iterer gjennom kundene og vis dem i en liste -->
+        <li th:each="customer : ${customers}">
+            <p>Customer ID: <span th:text="${customer.id}"></span></p>  <!-- Legg til ID -->
+            <p>Name: <span th:text="${customer.firstName} + ' ' + ${customer.lastName}"></span></p>
+            <p>Email: <span th:text="${customer.email}"></span></p>
+            <p>Phone: <span th:text="${customer.phone}"></span></p>
+
+            <h3>Addresses:</h3>
+            <div th:each="address : ${customer.addresses}">
+                <p th:text="'Id: ' + ${address.id}"></p>
+                <p th:text="'Street: ' + ${address.street}"></p>
+                <p th:text="'City: ' + ${address.city}"></p>
+                <p th:text="'Zip: ' + ${address.zipCode}"></p>
+                <hr />
+            </div>
+            <hr />
+        </li>
+    </ul>
+</div>
+
+<!-- Hvis det ikke er noen kunder -->
+<div th:if="${customers == null}">
+    <p>No customers available.</p>
+</div>
+
 </body>
 </html>
