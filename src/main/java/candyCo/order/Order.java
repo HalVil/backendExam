@@ -3,8 +3,6 @@ package candyCo.order;
 import candyCo.customer.Customer;
 import candyCo.customeraddress.CustomerAddress;
 
-import candyCo.product.Product;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;

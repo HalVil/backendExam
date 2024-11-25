@@ -4,7 +4,6 @@ import candyCo.customer.Customer;
 import candyCo.customer.CustomerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -22,24 +21,20 @@ public class CustomerAddressController {
 
     }
 
-    // Hent alle kundeadresser
     @GetMapping
     public ResponseEntity<List<CustomerAddress>> getAllAddresses() {
         List<CustomerAddress> addresses = customerAddressService.getAllAddresses();
         return ResponseEntity.ok(addresses);
     }
 
-    // Hent en spesifikk kundeadresse basert på ID
     @GetMapping("/{id}")
     public ResponseEntity<CustomerAddress> getAddressById(@PathVariable Long id) {
         CustomerAddress address = customerAddressService.getAddressById(id);
         return ResponseEntity.ok(address);
     }
 
-    // Opprett en ny kundeadresse
     @PostMapping
     public ResponseEntity<CustomerAddress> createAddress(@RequestBody CustomerAddressRequest request) {
-        // Fetch the customer based on customerId
         Customer customer = customerService.getCustomerById(request.getCustomerId());
 
 
@@ -47,22 +42,33 @@ public class CustomerAddressController {
             return ResponseEntity.badRequest().body(null);
         }
 
-        // Set the customer to the address
         CustomerAddress customerAddress = new CustomerAddress();
         customerAddress.setStreet(request.getStreet());
         customerAddress.setCity(request.getCity());
         customerAddress.setState(request.getState());
         customerAddress.setZipCode(request.getZipCode());
-        customerAddress.setCustomer(customer);  // Associate the address with the customer
+        customerAddress.setCustomer(customer);
 
         CustomerAddress createdAddress = customerAddressService.createAddress(customerAddress);
         return ResponseEntity.status(201).body(createdAddress);
     }
 
-    // Slett en kundeadresse
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAddress(@PathVariable Long id) {
         customerAddressService.deleteAddress(id);
         return ResponseEntity.noContent().build();
     }
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<Void> deleteAllAddresses() {
+        customerAddressService.deleteAllAddresses();
+        return ResponseEntity.noContent().build();
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<CustomerAddress> updateAddress(
+            @PathVariable Long id,
+            @RequestBody CustomerAddressRequest request) {
+        CustomerAddress updatedAddress = customerAddressService.updateAddress(id, request);
+        return ResponseEntity.ok(updatedAddress);
+    }
+
 }

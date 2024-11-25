@@ -1,11 +1,8 @@
 package candyCo.customer;
 
-import candyCo.customeraddress.CustomerAddress;
-import candyCo.order.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -41,4 +38,20 @@ public class CustomerController {
         customerService.deleteCustomer(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<Void> deleteAllCustomers() {
+        customerService.deleteAllCustomers();
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/contact")
+    public ResponseEntity<Customer> updateCustomerContact(
+            @PathVariable Long id,
+            @RequestBody CustomerContactUpdateRequest request) {
+        Customer updatedCustomer = customerService.updateCustomerContact(id, request.getEmail(), request.getPhone());
+        return ResponseEntity.ok(updatedCustomer);
+    }
+
+
+
 }

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/product")
@@ -36,14 +37,16 @@ public class ProductController {
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
-    @GetMapping("/{id}/availability")
-    public ResponseEntity<String> checkAvailability(@PathVariable Long id) {
-        Product product = productService.getProductById(id);
-        if (product.getQuantityOnHand() < 1) {
-            return ResponseEntity.ok("Out of Stock");
-        }
-        return ResponseEntity.ok("Available");
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<Void> deleteAllProducts() {
+        productService.deleteAllProducts();
+        return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<Product>> getAvailableProducts() {
+        List<Product> availableProducts = productService.getAvailableProducts();
+        return ResponseEntity.ok(availableProducts);
+    }
+
 }

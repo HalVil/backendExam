@@ -1,5 +1,6 @@
 package candyCo.customeraddress;
 
+import candyCo.customer.Customer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,4 +12,5 @@ public class CustomerAddressRequest {
     private String city;
     private String state;
     private int zipCode;
+    private Customer customer;
 }

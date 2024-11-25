@@ -1,10 +1,7 @@
 package candyCo.customer;
 
 import candyCo.application.error.CustomerNotFoundException;
-import candyCo.customeraddress.CustomerAddress;
-import candyCo.order.Order;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -12,8 +9,10 @@ public class CustomerService {
 
     private final CustomerRepo repo;
 
+
     public CustomerService(CustomerRepo customerRepository) {
         this.repo = customerRepository;
+
     }
 
     public Customer createCustomer(Customer customer) {
@@ -33,14 +32,21 @@ public class CustomerService {
         Customer customer = getCustomerById(id);
         repo.delete(customer);
     }
-
-    public List<Order> getCustomerOrders(Long customerId) {
-        Customer customer = getCustomerById(customerId);
-        return customer.getOrders();
+    public void deleteAllCustomers() {
+        repo.deleteAll();
     }
 
-    public List<CustomerAddress> getCustomerAddresses(Long customerId) {
-        Customer customer = getCustomerById(customerId);
-        return customer.getAddresses();
+    public Customer updateCustomerContact(Long id, String email, int phone) {
+        Customer customer = getCustomerById(id);
+
+        if (email != null && !email.isEmpty()) {
+            customer.setEmail(email);
+        }
+        if (phone > 0) {
+            customer.setPhone(phone);
+        }
+
+        return repo.save(customer);
     }
+
 }

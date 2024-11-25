@@ -2,7 +2,6 @@ package candyCo.customeraddress;
 
 import candyCo.customer.Customer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,4 +28,12 @@ public class CustomerAddress {
     @JoinColumn(name = "customer_id")
     @JsonIgnore
     private Customer customer;
+
+    public CustomerAddress(String s, String city, String state, int i, Customer customer) {
+        this.street = s;
+        this.city = city;
+        this.state = state;
+        this.zipCode = i;
+        this.customer = customer;
+    }
 }

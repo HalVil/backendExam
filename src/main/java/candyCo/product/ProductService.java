@@ -17,7 +17,6 @@ public class ProductService {
     }
 
     public Product createProduct(Product product) {
-        // Validering, om nødvendig, kan legges til her
         return productRepository.save(product);
     }
 
@@ -35,10 +34,12 @@ public class ProductService {
         productRepository.delete(product);
     }
 
-    public Set<Product> getAvailableProducts(Set<Long> productIds) {
-        return productRepository.findByStatus(ProductStatus.AVAILABLE).stream()
-                .filter(product -> productIds.contains(product.getId()))
-                .collect(Collectors.toSet());
+    public List<Product> getAvailableProducts() {
+        return productRepository.findByStatus(ProductStatus.AVAILABLE);
+    }
+
+    public void deleteAllProducts() {
+        productRepository.deleteAll();
     }
 
 }

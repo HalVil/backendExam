@@ -34,4 +34,11 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("customers")
     private List<Order> orders;
+
+    public Customer(String firstName, String lastName, int phone, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.email = email;
+    }
 }

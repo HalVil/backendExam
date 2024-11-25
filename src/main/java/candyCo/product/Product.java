@@ -28,4 +28,13 @@ public class Product {
     @Enumerated(EnumType.STRING)
     @Column
     private ProductStatus status;
+
+    public Product(String s, String sentence, BigDecimal bigDecimal, int i, ProductStatus productStatus) {
+        this.name = s;
+        this.description = sentence;
+        this.price = bigDecimal;
+        this.quantityOnHand = i;
+        this.status = productStatus;
+
+    }
 }
