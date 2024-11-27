@@ -14,25 +14,21 @@ public class CustomerAddressController {
     private final CustomerAddressService customerAddressService;
     private final CustomerService customerService;
 
-
     public CustomerAddressController(CustomerAddressService customerAddressService, CustomerService customerService) {
         this.customerAddressService = customerAddressService;
         this.customerService = customerService;
 
     }
-
     @GetMapping
     public ResponseEntity<List<CustomerAddress>> getAllAddresses() {
         List<CustomerAddress> addresses = customerAddressService.getAllAddresses();
         return ResponseEntity.ok(addresses);
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<CustomerAddress> getAddressById(@PathVariable Long id) {
         CustomerAddress address = customerAddressService.getAddressById(id);
         return ResponseEntity.ok(address);
     }
-
     @PostMapping
     public ResponseEntity<CustomerAddress> createAddress(@RequestBody CustomerAddressRequest request) {
         Customer customer = customerService.getCustomerById(request.getCustomerId());
@@ -52,7 +48,6 @@ public class CustomerAddressController {
         CustomerAddress createdAddress = customerAddressService.createAddress(customerAddress);
         return ResponseEntity.status(201).body(createdAddress);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAddress(@PathVariable Long id) {
         customerAddressService.deleteAddress(id);
@@ -70,5 +65,4 @@ public class CustomerAddressController {
         CustomerAddress updatedAddress = customerAddressService.updateAddress(id, request);
         return ResponseEntity.ok(updatedAddress);
     }
-
 }

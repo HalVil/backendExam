@@ -14,7 +14,6 @@ public class CustomerService {
         this.repo = customerRepository;
 
     }
-
     public Customer createCustomer(Customer customer) {
         return repo.save(customer);
     }
@@ -23,11 +22,9 @@ public class CustomerService {
         return repo.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer with ID " + id + " was not found."));
     }
-
     public List<Customer> getAllCustomers() {
         return repo.findAll();
     }
-
     public void deleteCustomer(Long id) {
         Customer customer = getCustomerById(id);
         repo.delete(customer);
@@ -35,7 +32,6 @@ public class CustomerService {
     public void deleteAllCustomers() {
         repo.deleteAll();
     }
-
     public Customer updateCustomerContact(Long id, String email, int phone) {
         Customer customer = getCustomerById(id);
 
@@ -45,8 +41,6 @@ public class CustomerService {
         if (phone > 0) {
             customer.setPhone(phone);
         }
-
         return repo.save(customer);
     }
-
 }

@@ -1,6 +1,7 @@
 package candyCo.customeraddress;
 
 import candyCo.application.error.CustomerAddressNotFoundException;
+import candyCo.application.error.CustomerNotFoundException;
 import candyCo.customer.Customer;
 import candyCo.customer.CustomerService;
 import org.springframework.stereotype.Service;
@@ -29,18 +30,15 @@ public class CustomerAddressService {
     public CustomerAddress createAddress(CustomerAddress customerAddress) {
         return customerAddressRepository.save(customerAddress);
     }
-
     public void deleteAddress(Long id) {
         if (!customerAddressRepository.existsById(id)) {
             throw new CustomerAddressNotFoundException("Address with ID " + id + " does not exist.");
         }
         customerAddressRepository.deleteById(id);
     }
-
     public void deleteAllAddresses() {
         customerAddressRepository.deleteAll();
     }
-
     public CustomerAddress updateAddress(Long id, CustomerAddressRequest request) {
         CustomerAddress existingAddress = getAddressById(id);
 
@@ -52,13 +50,12 @@ public class CustomerAddressService {
         if (request.getCustomerId() != null) {
             Customer customer = customerService.getCustomerById(request.getCustomerId());
             if (customer == null) {
-                throw new IllegalArgumentException("Customer with ID " + request.getCustomerId() + " does not exist.");
+                throw new CustomerNotFoundException("Customer with ID " + request.getCustomerId() + " does not exist.");
             }
             existingAddress.setCustomer(customer);
         }
 
         return customerAddressRepository.save(existingAddress);
+
     }
-
-
 }

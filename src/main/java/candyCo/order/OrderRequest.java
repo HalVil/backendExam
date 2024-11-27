@@ -13,6 +13,4 @@ public class OrderRequest {
     private Map<Long, Integer> productsWithQuantities;
     private Long shippingAddressId;
     private Boolean shipped;
-
-
 }

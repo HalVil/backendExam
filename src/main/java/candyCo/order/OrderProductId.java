@@ -18,11 +18,6 @@ public class OrderProductId implements Serializable {
     private Long productId;
 
 
-    public OrderProductId(Long orderId, Long productId) {
-        this.orderId = orderId;
-        this.productId = productId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -30,7 +25,6 @@ public class OrderProductId implements Serializable {
         OrderProductId that = (OrderProductId) o;
         return Objects.equals(orderId, that.orderId) && Objects.equals(productId, that.productId);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(orderId, productId);

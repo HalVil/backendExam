@@ -11,5 +11,4 @@ class BackendExamApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }

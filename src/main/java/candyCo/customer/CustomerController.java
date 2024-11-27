@@ -2,7 +2,6 @@ package candyCo.customer;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -20,7 +19,6 @@ public class CustomerController {
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
         return new ResponseEntity<>(customerService.createCustomer(customer), HttpStatus.CREATED);
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<Customer> getCustomerDetails(@PathVariable Long id) {
         Customer customer = customerService.getCustomerById(id);
@@ -28,7 +26,6 @@ public class CustomerController {
         customer.getOrders().size();
         return ResponseEntity.ok(customer);
     }
-
     @GetMapping
     public ResponseEntity<List<Customer>> getAllCustomers() {
         return new ResponseEntity<>(customerService.getAllCustomers(), HttpStatus.OK);
@@ -44,7 +41,6 @@ public class CustomerController {
         customerService.deleteAllCustomers();
         return ResponseEntity.noContent().build();
     }
-
     @PatchMapping("/{id}/contact")
     public ResponseEntity<Customer> updateCustomerContact(
             @PathVariable Long id,
@@ -52,9 +48,4 @@ public class CustomerController {
         Customer updatedCustomer = customerService.updateCustomerContact(id, request.getEmail(), request.getPhone());
         return ResponseEntity.ok(updatedCustomer);
     }
-
-
-
-
-
 }

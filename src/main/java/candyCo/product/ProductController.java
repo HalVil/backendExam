@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/product")
@@ -21,17 +20,14 @@ public class ProductController {
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         return new ResponseEntity<>(productService.createProduct(product), HttpStatus.CREATED);
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         return new ResponseEntity<>(productService.getProductById(id), HttpStatus.OK);
     }
-
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
         return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
@@ -42,11 +38,9 @@ public class ProductController {
         productService.deleteAllProducts();
         return ResponseEntity.noContent().build();
     }
-
     @GetMapping("/available")
     public ResponseEntity<List<Product>> getAvailableProducts() {
         List<Product> availableProducts = productService.getAvailableProducts();
         return ResponseEntity.ok(availableProducts);
     }
-
 }

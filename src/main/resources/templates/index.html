@@ -5,20 +5,18 @@
     <title>CandyCo</title>
 </head>
 <body>
-<h1>CandyCo Website</h1>
+<h1>CandyCo Customers</h1>
 <div align="center">
-    <h1>Products</h1>
+    <h1>To products</h1>
     <a href="/html/products">Click to view products</a>
 </div>
 <h2>Our Customers:</h2>
 
 
-<!-- Sjekk om listen med kunder er tom -->
 <div th:if="${customers != null}">
     <ul>
-        <!-- Iterer gjennom kundene og vis dem i en liste -->
         <li th:each="customer : ${customers}">
-            <p>Customer ID: <span th:text="${customer.id}"></span></p>  <!-- Legg til ID -->
+            <p>Customer ID: <span th:text="${customer.id}"></span></p>
             <p>Name: <span th:text="${customer.firstName} + ' ' + ${customer.lastName}"></span></p>
             <p>Email: <span th:text="${customer.email}"></span></p>
             <p>Phone: <span th:text="${customer.phone}"></span></p>
@@ -36,7 +34,6 @@
     </ul>
 </div>
 
-<!-- Hvis det ikke er noen kunder -->
 <div th:if="${customers == null}">
     <p>No customers available.</p>
 </div>

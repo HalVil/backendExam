@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CandyCo Orders</title>
+</head>
+<body>
+<h1>CandyCo Orders</h1>
+<div align="center">
+    <h1>Back to products</h1>
+    <a href="/html/products">Click to view products</a>
+</div>
+
+<h2>Our Orders:</h2>
+
+<div th:if="${orders != null}">
+    <ul>
+        <li th:each="order : ${orders}">
+            <p>Order ID: <span th:text="${order.id}"></span></p>
+            <p>Customer FirstName: <span th:text="${order.customer.firstName}"></span></p>
+            <p>Customer LastName: <span th:text="${order.customer.lastName}"></span></p>
+            <p>Total Price: <span th:text="${order.totalPrice}"></span></p>
+            <p>Shipping Charge: <span th:text="${order.shippingCharge}"></span></p>
+            <p>Shipped: <span th:text="${order.shipped} ? 'Yes' : 'No'"></span></p>
+
+            <h3>Products:</h3>
+            <ul>
+                <li th:each="orderProduct : ${order.orderProducts}">
+                    <p>Product Name: <span th:text="${orderProduct.product.name}"></span></p>
+                    <p>Quantity: <span th:text="${orderProduct.quantity}"></span></p>
+                </li>
+            </ul>
+
+            <hr />
+        </li>
+    </ul>
+</div>
+
+<div th:if="${orders == null}">
+    <p>No orders available.</p>
+</div>
+
+</body>
+</html>

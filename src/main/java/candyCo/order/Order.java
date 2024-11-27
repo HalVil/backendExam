@@ -2,13 +2,12 @@ package candyCo.order;
 
 import candyCo.customer.Customer;
 import candyCo.customeraddress.CustomerAddress;
-
+import candyCo.product.Product;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,4 +43,9 @@ public class Order {
     @JoinColumn(name = "shipping_address_id")
     @JsonIgnoreProperties("orders")
     private CustomerAddress shippingAddress;
+
+    public Order(long l, Customer customer, Product product, int i) {
+    }
+    public Order(long i, String s, Object o, Object o1, Object o2) {
+    }
 }

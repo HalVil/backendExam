@@ -36,4 +36,6 @@ public class CustomerAddress {
         this.zipCode = i;
         this.customer = customer;
     }
+    public CustomerAddress(String s, String city, String number, Customer customer) {
+    }
 }

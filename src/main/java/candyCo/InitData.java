@@ -27,30 +27,25 @@ public class InitData {
     private final ProductService productService;
     private final Faker faker = Faker.instance();
     private String generateEmail(String firstName, String lastName) {
-        String formattedFirstName = firstName.toLowerCase().replaceAll("[^a-z]", ""); // Fjerner spesialtegn
-        String formattedLastName = lastName.toLowerCase().replaceAll("[^a-z]", "");   // Fjerner spesialtegn
+        String formattedFirstName = firstName.toLowerCase().replaceAll("[^a-z]", "");
+        String formattedLastName = lastName.toLowerCase().replaceAll("[^a-z]", "");
         return formattedFirstName + "." + formattedLastName + "@example.com";
     }
-
-
     @Autowired
     public InitData(CustomerService customerService, CustomerAddressService customerAddressService, OrderService orderService, ProductService productService) {
         this.customerService = customerService;
         this.customerAddressService = customerAddressService;
         this.productService = productService;
     }
-
     @PostConstruct
     public void createTestData() {
 
-        //create customers
         List<Customer> customers = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             String firstName = faker.name().firstName();
             String lastName = faker.name().lastName();
             int randomPhoneNumber = faker.number().numberBetween(10000000, 99999999);
 
-            // Generer e-post basert på fornavn og etternavn
             String email = generateEmail(firstName, lastName);
 
             customers.add(
@@ -65,8 +60,6 @@ public class InitData {
             );
         }
 
-
-        //create customer addresses
         customers.forEach(customer -> {
             for (int i = 0; i < 1; i++) {
                 customerAddressService.createAddress(
@@ -81,7 +74,7 @@ public class InitData {
                 );
             }
         });
-        //create products
+
         List<Product> products = new ArrayList<>();
 
         Map<String, String> candyProducts = Map.ofEntries(

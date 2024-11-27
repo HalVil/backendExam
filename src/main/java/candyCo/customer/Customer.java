@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -40,5 +41,10 @@ public class Customer {
         this.lastName = lastName;
         this.phone = phone;
         this.email = email;
+        this.addresses = new ArrayList<>();
+    }
+    public Customer(String s) {
+    }
+    public Customer(String john, String doe, String mail) {
     }
 }

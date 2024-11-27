@@ -9,5 +9,4 @@ public class CandyCoApplication {
     public static void main(String[] args) {
         SpringApplication.run(CandyCoApplication.class, args);
     }
-
 }

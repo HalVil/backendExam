@@ -34,7 +34,6 @@ public class OrderService {
         this.productService = productService;
         this.customerAddressService = customerAddressService;
     }
-
     public Order createOrderFromRequest(OrderRequest request) {
         Customer customer = customerService.getCustomerById(request.getCustomerId());
 
@@ -45,7 +44,7 @@ public class OrderService {
 
             Product product = productService.getProductById(productId);
             if (product.getStatus() != ProductStatus.AVAILABLE) {
-                throw new IllegalArgumentException("Product is not available: " + product.getName());
+                throw new OutOfStockException("Product is not available: " + product.getName());
             }
             if (product.getQuantityOnHand() < quantity) {
                 throw new OutOfStockException(
@@ -78,7 +77,6 @@ public class OrderService {
         order.setTotalPrice(calculateTotalPrice(orderProducts, request.getShippingCharge()));
         return orderRepository.save(order);
     }
-
     public Order updateOrder(Long orderId, OrderUpdateRequest updateRequest) {
 
         Order existingOrder = getOrderById(orderId);
@@ -86,7 +84,6 @@ public class OrderService {
         if (updateRequest.getShipped() != null) {
             existingOrder.setShipped(updateRequest.getShipped());
         }
-
         if (updateRequest.getShippingAddressId() != null) {
             CustomerAddress newAddress = customerAddressService.getAddressById(updateRequest.getShippingAddressId());
             existingOrder.setShippingAddress(newAddress);
@@ -95,25 +92,19 @@ public class OrderService {
         return orderRepository.save(existingOrder);
     }
 
-
-
-
     private BigDecimal calculateTotalPrice(Set<OrderProduct> orderProducts, BigDecimal shippingCharge) {
         BigDecimal productTotal = orderProducts.stream()
                 .map(orderProduct -> orderProduct.getProduct().getPrice().multiply(BigDecimal.valueOf(orderProduct.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return productTotal.add(shippingCharge);
     }
-
     public Order getOrderById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found with ID: " + id));
     }
-
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
-
 
     public void deleteOrder(Long id) {
         Order existingOrder = getOrderById(id);
@@ -122,5 +113,4 @@ public class OrderService {
     public void deleteAllOrders() {
         orderRepository.deleteAll();
     }
-
 }
