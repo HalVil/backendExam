@@ -1,5 +1,6 @@
 package candyCo.order;
 
+import candyCo.application.error.OrdersNotFoundException;
 import candyCo.application.error.OutOfStockException;
 import candyCo.customer.Customer;
 import candyCo.customer.CustomerService;
@@ -90,6 +91,7 @@ public class OrderService {
         }
 
         return orderRepository.save(existingOrder);
+
     }
 
     private BigDecimal calculateTotalPrice(Set<OrderProduct> orderProducts, BigDecimal shippingCharge) {
@@ -100,7 +102,7 @@ public class OrderService {
     }
     public Order getOrderById(Long id) {
         return orderRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found with ID: " + id));
+                .orElseThrow(() -> new OrdersNotFoundException("Order not found with ID: " + id));
     }
     public List<Order> getAllOrders() {
         return orderRepository.findAll();

@@ -38,4 +38,13 @@ public class GlobalExceptionHandler {
                 .build();
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(OrdersNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleOrderNotFoundException(OrdersNotFoundException ex) {
+        ExceptionResponse response = ExceptionResponse.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .reason("Order not found")
+                .timestamp(ZonedDateTime.now(ZoneId.of("Europe/Oslo")))
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
 }
